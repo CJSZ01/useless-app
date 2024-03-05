@@ -9,17 +9,25 @@ class LoopState extends Equatable {
   final double loopSpeed;
   final double loopAngle;
   final double loopStep;
+  final bool hasStarted;
   const LoopState({
     required this.backgroundColor,
     required this.foregroundColor,
     required this.loopSpeed,
     required this.loopAngle,
     required this.loopStep,
+    required this.hasStarted,
   });
 
   @override
-  List<Object?> get props =>
-      [backgroundColor, foregroundColor, loopSpeed, loopAngle, loopStep];
+  List<Object?> get props => [
+        backgroundColor,
+        foregroundColor,
+        loopSpeed,
+        loopAngle,
+        loopStep,
+        hasStarted
+      ];
 
   LoopState copyWith({
     Color? backgroundColor,
@@ -27,6 +35,7 @@ class LoopState extends Equatable {
     double? loopSpeed,
     double? loopAngle,
     double? loopStep,
+    bool? hasStarted,
   }) {
     return LoopState(
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -34,6 +43,7 @@ class LoopState extends Equatable {
       loopSpeed: loopSpeed ?? this.loopSpeed,
       loopAngle: loopAngle ?? this.loopAngle,
       loopStep: loopStep ?? this.loopStep,
+      hasStarted: hasStarted ?? this.hasStarted,
     );
   }
 }

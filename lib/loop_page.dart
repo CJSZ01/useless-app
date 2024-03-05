@@ -26,7 +26,6 @@ class _LoopPageState extends State<LoopPage> {
     super.initState();
     _loopCubit = context.read<LoopCubit>();
     _musicCubit = context.read<MusicCubit>();
-    _musicCubit.initializeAudio();
     _loopCubit.reset();
   }
 
@@ -70,49 +69,79 @@ class _LoopPageState extends State<LoopPage> {
     return BlocBuilder<LoopCubit, LoopState>(
       bloc: _loopCubit,
       builder: (context, loopState) {
-        return Scaffold(
-          backgroundColor: loopState.backgroundColor,
-          bottomSheet: BlocBuilder<MusicCubit, MusicState>(
-              bloc: _musicCubit,
-              builder: (context, musicState) {
-                return LoopBottomSheet(
-                  controller: _bottomSheetController,
-                  onReset: _loopCubit.reset,
-                  state: loopState,
-                  onColorSelected: onColorSelected,
-                  onLoopSpeedChanged: onLoopSpeedChanged,
-                  onLoopAngleChanged: onLoopAngleChanged,
-                  onLoopStepChanged: onLoopStepChanged,
-                  isMute: musicState.isMute,
-                  onMute: () => onMute(musicState.isMute),
-                  onSongChanged: onSongChange,
-                  selectedSong: musicState.song,
-                  selectedColor: loopState.foregroundColor,
-                );
-              }),
-          body: Center(
-            child: Stack(
-              children: [
-                GestureDetector(
-                  onTap: () => _bottomSheetController.animateTo(
-                    0.09,
-                    duration: const Duration(milliseconds: 50),
-                    curve: Curves.easeInOut,
-                  ),
-                  child: LoopWidget(
+        return BlocBuilder<MusicCubit, MusicState>(
+            bloc: _musicCubit,
+            builder: (context, musicState) {
+              return Scaffold(
+                backgroundColor: loopState.backgroundColor,
+                bottomSheet: Visibility(
+                  visible: loopState.hasStarted,
+                  child: LoopBottomSheet(
+                    controller: _bottomSheetController,
+                    onReset: () {
+                      _loopCubit.reset();
+                      _musicCubit.resetSpeed();
+                    },
                     state: loopState,
+                    onColorSelected: onColorSelected,
+                    onLoopSpeedChanged: onLoopSpeedChanged,
+                    onLoopAngleChanged: onLoopAngleChanged,
+                    onLoopStepChanged: onLoopStepChanged,
+                    isMute: musicState.isMute,
+                    onMute: () => onMute(musicState.isMute),
+                    onSongChanged: onSongChange,
+                    selectedSong: musicState.song,
+                    selectedColor: loopState.foregroundColor,
                   ),
                 ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Image.asset(
-                    'images/logo.png',
+                body: Center(
+                  child: Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: () => _bottomSheetController.animateTo(
+                          0.09,
+                          duration: const Duration(milliseconds: 50),
+                          curve: Curves.easeInOut,
+                        ),
+                        child: LoopWidget(
+                          state: loopState,
+                        ),
+                      ),
+                      AnimatedAlign(
+                        alignment: musicState.hasInitialized
+                            ? Alignment.topCenter
+                            : Alignment.center,
+                        duration: const Duration(milliseconds: 250),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              'images/logo.png',
+                            ),
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 250),
+                              child: musicState.hasInitialized
+                                  ? const SizedBox.shrink()
+                                  : Container(
+                                      color: loopState.foregroundColor,
+                                      child: IconButton(
+                                          iconSize: 128,
+                                          color: loopState.backgroundColor,
+                                          onPressed: () {
+                                            _musicCubit.initializeAudio().then(
+                                                (value) => _loopCubit.start());
+                                          },
+                                          icon: const Icon(Icons.play_arrow)),
+                                    ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        );
+              );
+            });
       },
     );
   }

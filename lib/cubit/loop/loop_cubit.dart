@@ -7,13 +7,19 @@ class LoopCubit extends Cubit<LoopState> {
   LoopCubit()
       : super(
           LoopState(
-            loopAngle: 720.0,
-            loopStep: 30,
-            loopSpeed: 0.005,
-            backgroundColor: getRandomColor(),
-            foregroundColor: getRandomColor(),
-          ),
+              loopAngle: 720.0,
+              loopStep: 30,
+              loopSpeed: 0.005,
+              backgroundColor: getRandomColor(),
+              foregroundColor: getRandomColor(),
+              hasStarted: false),
         );
+
+  void start() {
+    emit(
+      state.copyWith(hasStarted: true),
+    );
+  }
 
   void reset() {
     var bg = getRandomColor();
@@ -23,12 +29,12 @@ class LoopCubit extends Cubit<LoopState> {
     } while (fg.value == bg.value);
     emit(
       LoopState(
-        loopAngle: 720.0,
-        loopStep: 30,
-        loopSpeed: 0.005,
-        backgroundColor: bg,
-        foregroundColor: fg,
-      ),
+          loopAngle: 720.0,
+          loopStep: 30,
+          loopSpeed: 0.005,
+          backgroundColor: bg,
+          foregroundColor: fg,
+          hasStarted: state.hasStarted),
     );
   }
 

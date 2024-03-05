@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:useless_app/components/loop/loop_painter.dart';
 import 'package:useless_app/cubit/loop/loop_state.dart';
@@ -17,10 +18,13 @@ class _LoopWidgetState extends State<LoopWidget> {
   @override
   void initState() {
     super.initState();
+
     timer = Timer.periodic(const Duration(milliseconds: 25), (timer) {
-      setState(() {
-        theta += widget.state.loopSpeed;
-      });
+      if (widget.state.hasStarted) {
+        setState(() {
+          theta += widget.state.loopSpeed;
+        });
+      }
     });
   }
 
@@ -31,7 +35,14 @@ class _LoopWidgetState extends State<LoopWidget> {
         theta: theta,
         state: widget.state,
       ),
-      child: Container(),
+      child: BackdropFilter(
+        filter: widget.state.hasStarted
+            ? ImageFilter.blur()
+            : ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+        child: Container(
+          color: Colors.black.withOpacity(widget.state.hasStarted ? 0 : 0.5),
+        ),
+      ),
     );
   }
 }

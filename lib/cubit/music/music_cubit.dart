@@ -15,6 +15,12 @@ class MusicCubit extends Cubit<MusicState> {
     _player.setVolume(1.0);
     _player.setLoopMode(LoopMode.one);
     _player.play();
+    emit(state.copyWith(hasInitialized: true));
+  }
+
+  void resetSpeed() {
+    emit(state.copyWith(speed: 1.0));
+    _player.setSpeed(state.speed);
   }
 
   void updateState({double? loopSpeed, int? song, bool? isMute}) async {
