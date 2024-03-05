@@ -1,0 +1,4 @@
+enum LoopColorTypes {
+  foreground,
+  background,
+}

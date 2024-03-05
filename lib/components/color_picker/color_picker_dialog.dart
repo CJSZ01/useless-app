@@ -1,13 +1,11 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-
-import 'package:lil_loop/utils/lil_loop_color_types_enum.dart';
-import 'package:lil_loop/utils/lil_loop_typedefs.dart';
+import 'package:useless_app/utils/loop_color_types_enum.dart';
+import 'package:useless_app/utils/loop_typedefs.dart';
 
 class ColorPickerDialog extends StatelessWidget {
   final OnColorSelected onColorSelected;
-  final LilLoopColorTypes colorType;
+  final LoopColorTypes colorType;
   final Color currentColor;
   const ColorPickerDialog({
     Key? key,

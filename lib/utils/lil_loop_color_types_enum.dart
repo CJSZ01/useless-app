@@ -1,4 +1,0 @@
-enum LilLoopColorTypes {
-  foreground,
-  background,
-}

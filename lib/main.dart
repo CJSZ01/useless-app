@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lil_loop/lil_loop_app.dart';
+import 'package:useless_app/useless_app.dart';
 
 void main() {
   runApp(
-    const LilLoopApp(),
+    const UselessApp(),
   );
 }
